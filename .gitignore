@@ -1,0 +1,7 @@
+# Directory names
+bin/
+obj/
+
+# Directory paths
+/.vs/
+/packages/
