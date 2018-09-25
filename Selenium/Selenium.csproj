@@ -51,6 +51,8 @@
   <ItemGroup>
     <Compile Include="Tests\Omada.cs" />
     <Compile Include="Utilities\Extensions.cs" />
+    <Compile Include="Utilities\UIElement.cs" />
+    <Compile Include="Utilities\UIElements.cs" />
     <Compile Include="Utilities\UIMap.cs" />
   </ItemGroup>
   <ItemGroup>

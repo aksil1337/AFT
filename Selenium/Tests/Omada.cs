@@ -5,6 +5,7 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.IE;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using Selenium.Utilities;
@@ -26,6 +27,8 @@ namespace Selenium.Tests
         public Omada(string typeName) => TypeName = typeName;
 
         // Properties
+
+        public Actions Actions { get; private set; }
 
         protected RemoteWebDriver Driver { get; private set; }
 
@@ -65,12 +68,13 @@ namespace Selenium.Tests
                     Driver = new ChromeDriver(executingPath);
                     break;
                 case nameof(InternetExplorerDriver):
-                    Driver = new InternetExplorerDriver(executingPath);
+                    Driver = new InternetExplorerDriver(executingPath, new InternetExplorerOptions() { RequireWindowFocus = true });
                     break;
             }
 
             Driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(30);
 
+            Actions = new Actions(Driver);
             Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
 
             UI = new UIMap(Driver);
@@ -96,25 +100,34 @@ namespace Selenium.Tests
             Driver.Navigate().GoToUrl("https://www.omada.net/");
             WaitForPageLoad();
 
-            CollectionAssert.Contains(UI.Header.GetClassNames(), "is-medium");
+            CollectionAssert.Contains(UI.Header.Element.GetClassNames(), "is-medium");
 
             // Step 2
 
-            UI.HeaderSearchInput.SendKeys("gartner");
-            UI.HeaderSearchInput.Submit();
+            UI.HeaderSearchInput.Element.SendKeys("gartner");
+            UI.HeaderSearchInput.Element.Submit();
             WaitForPageLoad();
 
-            var searchResultTexts = UI.MainSearchResultsLinks.Select(element => Regex.Match(element.Text, @"(?<=\d\. )(.*)").Value).ToList();
+            var searchResultTexts = UI.MainSearchResultsLinks.Elements.Select(element => Regex.Match(element.Text, @"(?<=\d\. )(.*)").Value).ToList();
 
             Assert.Greater(searchResultTexts.Count(), 1);
             CollectionAssert.Contains(searchResultTexts, "Gartner IAM Summit 2016 - London");
 
             // Step 3
 
-            UI.MainSearchResultsLinks[searchResultTexts.IndexOf("Gartner IAM Summit 2016 - London")].ScrollIntoView(Driver).Click();
+            UI.MainSearchResultsLinks.Elements[searchResultTexts.IndexOf("Gartner IAM Summit 2016 - London")].ScrollIntoView(Driver).Click();
             WaitForPageLoad();
 
-            Assert.AreEqual("Gartner IAM Summit 2016 - London", UI.MainH1.Text);
+            Assert.AreEqual("Gartner IAM Summit 2016 - London", UI.MainH1.Element.Text);
+
+            // Step 4
+
+            UI.HeaderNavMoreLink.Element.Hover(Actions);
+            Wait.Until(ExpectedConditions.ElementIsVisible(UI.HeaderNavMoreNewsLink.By));
+            UI.HeaderNavMoreNewsLink.Element.Click();
+            WaitForPageLoad();
+
+            CollectionAssert.Contains(UI.MainArticlesH1s.Elements.Select(element => element.Text), "Gartner IAM Summit 2016 - London");
         }
     }
 }

@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,6 +21,19 @@ namespace Selenium.Utilities
         public static IEnumerable<string> GetClassNames(this IWebElement source)
         {
             return source.GetAttribute("class").Split(' ').Where(text => !string.IsNullOrEmpty(text));
+        }
+
+        /// <summary>
+        /// Hovers the cursor over the element.
+        /// </summary>
+        /// <param name="source">The source element.</param>
+        /// <param name="actions">An instance of the <see cref="Actions"/> class.</param>
+        /// <returns>An instance of the source element.</returns>
+        public static IWebElement Hover(this IWebElement source, Actions actions)
+        {
+            actions.MoveToElement(source).Build().Perform();
+
+            return source;
         }
 
         /// <summary>
