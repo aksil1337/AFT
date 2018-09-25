@@ -3,6 +3,7 @@
 
 using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
+using System.Collections.ObjectModel;
 
 namespace Selenium.Utilities
 {
@@ -23,5 +24,8 @@ namespace Selenium.Utilities
 
         public IWebElement Header => Driver.FindElementByXPath("//header");
         public IWebElement HeaderSearchInput => Driver.FindElementByXPath("//header//form[@class='header__search']/input");
+
+        public IWebElement MainH1 => Driver.FindElementByXPath("//main//h1");
+        public ReadOnlyCollection<IWebElement> MainSearchResultsLinks => Driver.FindElementsByXPath("//main//div[@class='search-results__content']/section/a");
     }
 }

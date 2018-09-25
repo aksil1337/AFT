@@ -21,5 +21,20 @@ namespace Selenium.Utilities
         {
             return source.GetAttribute("class").Split(' ').Where(text => !string.IsNullOrEmpty(text));
         }
+
+        /// <summary>
+        /// Scrolls the element into the visible area of the browser window.
+        /// </summary>
+        /// <param name="source">The source element.</param>
+        /// <param name="executor">A script executor.</param>
+        /// <returns>An instance of the source element.</returns>
+        public static IWebElement ScrollIntoView(this IWebElement source, IJavaScriptExecutor executor)
+        {
+            // The following script mimics the behavior of scrollIntoView({})
+            // as it is considered experimental API and does not work in IE and Safari
+            executor.ExecuteScript("window.scrollTo(0, arguments[0].offsetTop + (arguments[0].offsetHeight / 2) - (window.innerHeight / 2));", source);
+
+            return source;
+        }
     }
 }

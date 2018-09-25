@@ -11,7 +11,9 @@ using Selenium.Utilities;
 using SeleniumExtras.WaitHelpers;
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Selenium.Tests
 {
@@ -101,6 +103,18 @@ namespace Selenium.Tests
             UI.HeaderSearchInput.SendKeys("gartner");
             UI.HeaderSearchInput.Submit();
             WaitForPageLoad();
+
+            var searchResultTexts = UI.MainSearchResultsLinks.Select(element => Regex.Match(element.Text, @"(?<=\d\. )(.*)").Value).ToList();
+
+            Assert.Greater(searchResultTexts.Count(), 1);
+            CollectionAssert.Contains(searchResultTexts, "Gartner IAM Summit 2016 - London");
+
+            // Step 3
+
+            UI.MainSearchResultsLinks[searchResultTexts.IndexOf("Gartner IAM Summit 2016 - London")].ScrollIntoView(Driver).Click();
+            WaitForPageLoad();
+
+            Assert.AreEqual("Gartner IAM Summit 2016 - London", UI.MainH1.Text);
         }
     }
 }
