@@ -13,21 +13,58 @@ namespace Selenium.Utilities
     {
         // Constructors
 
-        public UIMap(RemoteWebDriver driver) => Driver = driver;
+        public UIMap(RemoteWebDriver driver)
+        {
+            Element = new UIElement(this, driver);
+            Elements = new UIElements(this, driver);
+        }
 
         // Properties
 
-        public RemoteWebDriver Driver { get; }
+        protected UIElement Element { get; }
+
+        protected UIElements Elements { get; }
+
+        // Methods
+
+        /// <summary>
+        /// Finds the first element in the page that matches the XPath supplied.
+        /// </summary>
+        /// <param name="xpath">An XPath to the element.</param>
+        /// <returns>The first element found, wrapped in the functionality extender.</returns>
+        public UIElement FindElement(string xpath)
+        {
+            Element.By = By.XPath(xpath);
+            Element.Element = Element.Driver.FindElement(Element.By);
+
+            return Element;
+        }
+
+        /// <summary>
+        /// Finds a list of elements that match the XPath supplied.
+        /// </summary>
+        /// <param name="xpath">An XPath to the elements.</param>
+        /// <returns>The list of elements found, wrapped in the functionality extender.</returns>
+        public UIElements FindElements(string xpath)
+        {
+            Elements.By = By.XPath(xpath);
+            Elements.Elements = Elements.Driver.FindElements(Elements.By);
+
+            return Elements;
+        }
 
         // UI Elements
 
-        public UIElement Header => new UIElement(Driver, By.XPath("//header"));
-        public UIElement HeaderNavMoreLink => new UIElement(Driver, By.XPath("//header//a[text()='More...']"));
-        public UIElement HeaderNavMoreNewsLink => new UIElement(Driver, By.XPath("//header//a[text()='News']"));
-        public UIElement HeaderSearchInput => new UIElement(Driver, By.XPath("//header//form[@class='header__search']/input"));
+        public UIElement Header => FindElement("//header");
+        public UIElement HeaderHomeLink => FindElement("//header//a[@class='header__home']");
+        public UIElement HeaderContactLink => FindElement("//header//a[text()='Contact']");
+        public UIElement HeaderNavMoreLink => FindElement("//header//a[text()='More...']");
+        public UIElement HeaderNavMoreNewsLink => FindElement("//header//a[text()='News']");
+        public UIElement HeaderSearchInput => FindElement("//header//form[@class='header__search']/input");
 
-        public UIElement MainH1 => new UIElement(Driver, By.XPath("//main//h1"));
-        public UIElements MainSearchResultsLinks => new UIElements(Driver, By.XPath("//main//div[@class='search-results__content']/section/a"));
-        public UIElements MainArticlesH1s => new UIElements(Driver, By.XPath("//main//div[@class='cases__items']//h1"));
+        public UIElement MainH1 => FindElement("//main//h1");
+        public UIElements MainSearchResultsLinks => FindElements("//main//div[@class='search-results__content']/section/a");
+        public UIElements MainArticlesH1s => FindElements("//main//div[@class='cases__items']//h1");
+        public UIElement MainTabsUsWestSpan => FindElement("//main//span[text()='U.S. West']");
     }
 }

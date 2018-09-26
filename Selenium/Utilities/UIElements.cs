@@ -2,27 +2,24 @@
 // Licensed under the MIT License.
 
 using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
 using System.Collections.ObjectModel;
 
 namespace Selenium.Utilities
 {
     /// <summary>
-    /// Exposes a locator in addition to the elements themselves.
+    /// Provides a wrapper to extend the functionality of the UI web elements.
     /// </summary>
-    class UIElements
+    class UIElements : UIBase
     {
         // Constructors
 
-        public UIElements(IWebDriver driver, By by)
-        {
-            By = by;
-            Elements = driver.FindElements(By);
-        }
+        public UIElements(UIMap map, RemoteWebDriver driver) : base(map, driver) { }
 
         // Properties
+        
+        public UIElement this[int i] => Map.FindElement($"({By.ToString().Substring(10)})[{i + 1}]");
 
-        public By By { get; } = null;
-
-        public ReadOnlyCollection<IWebElement> Elements { get; }
+        public ReadOnlyCollection<IWebElement> Elements { get; internal set; }
     }
 }

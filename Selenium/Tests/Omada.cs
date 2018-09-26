@@ -2,14 +2,10 @@
 // Licensed under the MIT License.
 
 using NUnit.Framework;
-using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.IE;
-using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Remote;
-using OpenQA.Selenium.Support.UI;
 using Selenium.Utilities;
-using SeleniumExtras.WaitHelpers;
 using System;
 using System.IO;
 using System.Linq;
@@ -28,29 +24,11 @@ namespace Selenium.Tests
 
         // Properties
 
-        public Actions Actions { get; private set; }
-
         protected RemoteWebDriver Driver { get; private set; }
-
-        protected IWebElement HtmlElement { get; private set; }
 
         protected string TypeName { get; }
 
         protected UIMap UI { get; private set; }
-
-        protected WebDriverWait Wait { get; private set; }
-
-        // Helper methods
-
-        /// <summary>
-        /// Waits for the page to be loaded propely.
-        /// </summary>
-        public void WaitForPageLoad()
-        {
-            Wait.Until(ExpectedConditions.StalenessOf(HtmlElement));
-            Wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
-            HtmlElement = Driver.FindElement(By.TagName("html"));
-        }
 
         // Setup and Teardown
 
@@ -74,9 +52,6 @@ namespace Selenium.Tests
 
             Driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(30);
 
-            Actions = new Actions(Driver);
-            Wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
-
             UI = new UIMap(Driver);
         }
 
@@ -98,15 +73,13 @@ namespace Selenium.Tests
 
             Driver.Manage().Window.Maximize();
             Driver.Navigate().GoToUrl("https://www.omada.net/");
-            WaitForPageLoad();
+            UI.Header.WaitForPageLoad();
 
-            CollectionAssert.Contains(UI.Header.Element.GetClassNames(), "is-medium");
+            CollectionAssert.Contains(UI.Header.GetClassNames(), "is-medium");
 
             // Step 2
 
-            UI.HeaderSearchInput.Element.SendKeys("gartner");
-            UI.HeaderSearchInput.Element.Submit();
-            WaitForPageLoad();
+            UI.HeaderSearchInput.SendKeys("gartner").Submit().WaitForPageLoad();
 
             var searchResultTexts = UI.MainSearchResultsLinks.Elements.Select(element => Regex.Match(element.Text, @"(?<=\d\. )(.*)").Value).ToList();
 
@@ -115,19 +88,27 @@ namespace Selenium.Tests
 
             // Step 3
 
-            UI.MainSearchResultsLinks.Elements[searchResultTexts.IndexOf("Gartner IAM Summit 2016 - London")].ScrollIntoView(Driver).Click();
-            WaitForPageLoad();
+            UI.MainSearchResultsLinks[searchResultTexts.IndexOf("Gartner IAM Summit 2016 - London")].ScrollIntoView().Click().WaitForPageLoad();
 
             Assert.AreEqual("Gartner IAM Summit 2016 - London", UI.MainH1.Element.Text);
 
             // Step 4
 
-            UI.HeaderNavMoreLink.Element.Hover(Actions);
-            Wait.Until(ExpectedConditions.ElementIsVisible(UI.HeaderNavMoreNewsLink.By));
-            UI.HeaderNavMoreNewsLink.Element.Click();
-            WaitForPageLoad();
+            UI.HeaderNavMoreLink.Hover();
+            UI.HeaderNavMoreNewsLink.WaitUntilVisible().Click().WaitForPageLoad();
 
             CollectionAssert.Contains(UI.MainArticlesH1s.Elements.Select(element => element.Text), "Gartner IAM Summit 2016 - London");
+
+            // Step 5
+
+            UI.HeaderHomeLink.Click().WaitForPageLoad();
+            UI.HeaderContactLink.Click().WaitForPageLoad();
+
+            var previousClasses = UI.MainTabsUsWestSpan.GetClassNames();
+            UI.MainTabsUsWestSpan.Click();
+            var currentClasses = UI.MainTabsUsWestSpan.GetClassNames();
+
+            CollectionAssert.IsSupersetOf(currentClasses, previousClasses);
         }
     }
 }
