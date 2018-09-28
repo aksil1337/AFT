@@ -54,6 +54,7 @@
     <Compile Include="Utilities\UIElement.cs" />
     <Compile Include="Utilities\UIElements.cs" />
     <Compile Include="Utilities\UIMap.cs" />
+    <Compile Include="Utilities\UIPage.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">

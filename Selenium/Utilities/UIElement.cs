@@ -17,11 +17,9 @@ namespace Selenium.Utilities
     {
         // Constructors
 
-        public UIElement(UIMap map, RemoteWebDriver driver) : base(map, driver) => Actions = new Actions(driver);
+        public UIElement(UIMap map, RemoteWebDriver driver) : base(map, driver) { }
 
         // Properties
-
-        public Actions Actions { get; }
 
         public IWebElement Element { get; internal set; }
 
@@ -53,7 +51,7 @@ namespace Selenium.Utilities
         /// <returns>An instance of this class.</returns>
         public UIElement Hover()
         {
-            Actions.MoveToElement(Element).Build().Perform();
+            new Actions(Driver).MoveToElement(Element).Build().Perform();
 
             return this;
         }

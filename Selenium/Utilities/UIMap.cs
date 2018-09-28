@@ -17,6 +17,7 @@ namespace Selenium.Utilities
         {
             Element = new UIElement(this, driver);
             Elements = new UIElements(this, driver);
+            Page = new UIPage(this, driver);
         }
 
         // Properties
@@ -24,6 +25,8 @@ namespace Selenium.Utilities
         protected UIElement Element { get; }
 
         protected UIElements Elements { get; }
+
+        public UIPage Page { get; }
 
         // Methods
 
@@ -66,5 +69,6 @@ namespace Selenium.Utilities
         public UIElements MainSearchResultsLinks => FindElements("//main//div[@class='search-results__content']/section/a");
         public UIElements MainArticlesH1s => FindElements("//main//div[@class='cases__items']//h1");
         public UIElement MainTabsUsWestSpan => FindElement("//main//span[text()='U.S. West']");
+        public UIElement MainTabsGermanySpan => FindElement("//main//span[text()='Germany']");
     }
 }

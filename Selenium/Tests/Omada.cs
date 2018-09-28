@@ -73,7 +73,7 @@ namespace Selenium.Tests
 
             Driver.Manage().Window.Maximize();
             Driver.Navigate().GoToUrl("https://www.omada.net/");
-            UI.Header.WaitForPageLoad();
+            UI.Page.WaitForPageLoad();
 
             CollectionAssert.Contains(UI.Header.GetClassNames(), "is-medium");
 
@@ -109,6 +109,10 @@ namespace Selenium.Tests
             var currentClasses = UI.MainTabsUsWestSpan.GetClassNames();
 
             CollectionAssert.IsSupersetOf(currentClasses, previousClasses);
+
+            UI.Page.SaveScreenshot("screenshots/0-before-mouse-hover-on-tab");
+            UI.MainTabsGermanySpan.Hover();
+            UI.Page.SaveScreenshot("screenshots/1-after-mouse-hover-on-tab");
         }
     }
 }
