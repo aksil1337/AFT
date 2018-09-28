@@ -70,5 +70,8 @@ namespace Selenium.Utilities
         public UIElements MainArticlesH1s => FindElements("//main//div[@class='cases__items']//h1");
         public UIElement MainTabsUsWestSpan => FindElement("//main//span[text()='U.S. West']");
         public UIElement MainTabsGermanySpan => FindElement("//main//span[text()='Germany']");
+
+        public UIElement CookieReadPrivacyPolicyLink => FindElement("//div[@class='cookiebar__container']//a[text()='Read Privacy Policy']");
+        public UIElement CookieCloseButtonSpan => FindElement("//div[@class='cookiebar__container']//span[contains(@class,'cookiebar__button')]");
     }
 }

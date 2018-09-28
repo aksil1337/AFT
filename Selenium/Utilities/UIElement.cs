@@ -82,12 +82,39 @@ namespace Selenium.Utilities
         }
 
         /// <summary>
+        /// Sets the value of an attribute on the element.
+        /// </summary>
+        /// <remarks>
+        /// If the attribute already exists, the value is updated; otherwise a new attribute is added with the specified name and value.
+        /// </remarks>
+        /// <param name="name">The name of the attribute whose value is to be set.</param>
+        /// <param name="value">The value to assign to the attribute.</param>
+        /// <returns>An instance of this class.</returns>
+        public UIElement SetAttribute(string name, string value)
+        {
+            Driver.ExecuteScript("arguments[0].setAttribute(arguments[1], arguments[2]);", Element, name, value);
+
+            return this;
+        }
+
+        /// <summary>
         /// Submits the element to the web server.
         /// </summary>
         /// <returns>An instance of this class.</returns>
         public UIElement Submit()
         {
             Element.Submit();
+
+            return this;
+        }
+
+        /// <summary>
+        /// Waits for the element to be invisible.
+        /// </summary>
+        /// <returns>An instance of this class.</returns>
+        public UIElement WaitUntilInvisibile()
+        {
+            Wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By));
 
             return this;
         }

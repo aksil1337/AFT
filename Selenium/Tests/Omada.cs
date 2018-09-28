@@ -46,7 +46,7 @@ namespace Selenium.Tests
                     Driver = new ChromeDriver(executingPath);
                     break;
                 case nameof(InternetExplorerDriver):
-                    Driver = new InternetExplorerDriver(executingPath, new InternetExplorerOptions() { RequireWindowFocus = true });
+                    Driver = new InternetExplorerDriver(executingPath, new InternetExplorerOptions() { EnsureCleanSession = true, RequireWindowFocus = true });
                     break;
             }
 
@@ -113,6 +113,22 @@ namespace Selenium.Tests
             UI.Page.SaveScreenshot("screenshots/0-before-mouse-hover-on-tab");
             UI.MainTabsGermanySpan.Hover();
             UI.Page.SaveScreenshot("screenshots/1-after-mouse-hover-on-tab");
+
+            // Step 6
+
+            UI.CookieReadPrivacyPolicyLink.SetAttribute("target", "_blank").Click();
+            UI.Page.SwitchToTab(Index.Last).WaitForPageLoad();
+
+            // Step 7
+
+            UI.Page.SwitchToTab(Index.First);
+            UI.CookieCloseButtonSpan.Click();
+
+            UI.Page.CloseTab(Index.Last);
+            Driver.Navigate().Refresh();
+            UI.Page.WaitForPageLoad();
+
+            UI.CookieReadPrivacyPolicyLink.WaitUntilInvisibile();
         }
     }
 }
