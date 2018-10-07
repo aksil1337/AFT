@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Tests\Omada.cs" />
+    <Compile Include="Tests\TestBase.cs" />
     <Compile Include="Utilities\Enums\Index.cs" />
     <Compile Include="Utilities\UIBase.cs" />
     <Compile Include="Utilities\UIElement.cs" />

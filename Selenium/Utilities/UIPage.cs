@@ -23,14 +23,17 @@ namespace Selenium.Utilities
 
         // Properties
 
+        /// <summary>
+        /// Gets the underlying HTML element.
+        /// </summary>
         public IWebElement Element => HtmlElement;
-
+        
         protected int TabIndex { get; private set; } = 0;
 
         // Methods
 
         /// <summary>
-        /// Closes the currently opened tab.
+        /// Closes the current tab.
         /// </summary>
         /// <returns>An instance of this class.</returns>
         public UIPage CloseCurrentTab()
@@ -55,6 +58,40 @@ namespace Selenium.Utilities
         }
 
         /// <summary>
+        /// Load a new page in the current tab.
+        /// </summary>
+        /// <param name="url">The URL to load.</param>
+        /// <returns>An instance of this class.</returns>
+        public UIPage GoToUrl(string url)
+        {
+            Driver.Navigate().GoToUrl(url);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Maximizes the current browser window.
+        /// </summary>
+        /// <returns>An instance of this class.</returns>
+        public UIPage Maximize()
+        {
+            Driver.Manage().Window.Maximize();
+
+            return this;
+        }
+
+        /// <summary>
+        /// Refreshes the page in the current tab.
+        /// </summary>
+        /// <returns>An instance of this class.</returns>
+        public UIPage Refresh()
+        {
+            Driver.Navigate().Refresh();
+
+            return this;
+        }
+
+        /// <summary>
         /// Saves a screenshot to a file. Overwrites the already existing file and creates non-existent directories.
         /// </summary>
         /// <param name="fileName">The file name to save the screenshot to. May include relative or absolute path.</param>
@@ -72,7 +109,7 @@ namespace Selenium.Utilities
         }
 
         /// <summary>
-        /// Switches the currently opened tab to another one specified by the enumerated position.
+        /// Switches the current tab to another one specified by the enumerated position.
         /// </summary>
         /// <param name="tab">The position of the tab.</param>
         /// <returns>An instance of this class.</returns>
@@ -90,7 +127,7 @@ namespace Selenium.Utilities
         }
 
         /// <summary>
-        /// Switches the currently opened tab to another one specified by the index.
+        /// Switches the current tab to another one specified by the index.
         /// </summary>
         /// <param name="index">The zero-based index of the tab.</param>
         /// <returns>An instance of this class.</returns>

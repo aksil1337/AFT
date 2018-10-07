@@ -21,7 +21,23 @@ namespace Selenium.Utilities
 
         // Properties
 
+        /// <summary>
+        /// Gets the class names of the element.
+        /// </summary>
+        public IEnumerable<string> ClassNames => Element.GetAttribute("class").Split(' ').Where(text => !string.IsNullOrEmpty(text));
+
+        /// <summary>
+        /// Gets or sets the underlying element.
+        /// </summary>
         public IWebElement Element { get; internal set; }
+
+        /// <summary>
+        /// Gets the inner text of the element.
+        /// </summary>
+        /// <remarks>
+        /// Any leading or trailing whitespace is removed; other whitespace is collapsed.
+        /// </remarks>
+        public string Text => Element.Text;
 
         // Methods
 
@@ -34,15 +50,6 @@ namespace Selenium.Utilities
             Element.Click();
 
             return this;
-        }
-
-        /// <summary>
-        /// Gets the class names of the element.
-        /// </summary>
-        /// <returns>A sequence of class names.</returns>
-        public IEnumerable<string> GetClassNames()
-        {
-            return Element.GetAttribute("class").Split(' ').Where(text => !string.IsNullOrEmpty(text));
         }
 
         /// <summary>

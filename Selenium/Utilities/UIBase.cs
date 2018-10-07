@@ -38,12 +38,12 @@ namespace Selenium.Utilities
         // Methods
 
         /// <summary>
-        /// Waits for the page to be loaded propely.
+        /// Waits for the new page to be loaded propely.
         /// </summary>
-        public void WaitForPageLoad()
+        public void WaitForNewPage()
         {
             Wait.Until(ExpectedConditions.StalenessOf(HtmlElement));
-            Wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
+            Wait.Until(_ => Driver.ExecuteScript("return document.readyState").Equals("complete"));
             HtmlElement = Driver.FindElement(By.TagName("html"));
         }
     }

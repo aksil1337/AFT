@@ -4,29 +4,21 @@
 using NUnit.Framework;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.IE;
-using OpenQA.Selenium.Remote;
 using Selenium.Utilities;
-using System;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace Selenium.Tests
 {
     [TestFixture(nameof(ChromeDriver))]
     [TestFixture(nameof(InternetExplorerDriver))]
-    class Omada
+    class Omada : TestBase
     {
         // Constructors
 
-        public Omada(string typeName) => TypeName = typeName;
+        public Omada(string typeName) : base(typeName) { }
 
         // Properties
-
-        protected RemoteWebDriver Driver { get; private set; }
-
-        protected string TypeName { get; }
 
         protected UIMap UI { get; private set; }
 
@@ -36,32 +28,9 @@ namespace Selenium.Tests
         /// Runs the specified code before each test.
         /// </summary>
         [SetUp]
-        public void BeforeEach()
+        public new void BeforeEach()
         {
-            var executingPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            switch (TypeName)
-            {
-                case nameof(ChromeDriver):
-                    Driver = new ChromeDriver(executingPath);
-                    break;
-                case nameof(InternetExplorerDriver):
-                    Driver = new InternetExplorerDriver(executingPath, new InternetExplorerOptions() { EnsureCleanSession = true, RequireWindowFocus = true });
-                    break;
-            }
-
-            Driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(30);
-
             UI = new UIMap(Driver);
-        }
-
-        /// <summary>
-        /// Runs the specified code after each test.
-        /// </summary>
-        [TearDown]
-        public void AfterEach()
-        {
-            Driver.Quit();
         }
 
         // Tests
@@ -69,44 +38,45 @@ namespace Selenium.Tests
         [Test]
         public void EndToEnd()
         {
+            var searchText = "gartner";
+            var articleTitle = "Gartner IAM Summit 2016 - London";
+
             // Step 1
 
-            Driver.Manage().Window.Maximize();
-            Driver.Navigate().GoToUrl("https://www.omada.net/");
-            UI.Page.WaitForPageLoad();
+            UI.Page.Maximize().GoToUrl("https://www.omada.net/").WaitForNewPage();
 
-            CollectionAssert.Contains(UI.Header.GetClassNames(), "is-medium");
+            CollectionAssert.Contains(UI.Header.ClassNames, "is-medium");
 
             // Step 2
 
-            UI.HeaderSearchInput.SendKeys("gartner").Submit().WaitForPageLoad();
+            UI.HeaderSearchInput.SendKeys(searchText).Submit().WaitForNewPage();
 
             var searchResultTexts = UI.MainSearchResultsLinks.Elements.Select(element => Regex.Match(element.Text, @"(?<=\d\. )(.*)").Value).ToList();
 
             Assert.Greater(searchResultTexts.Count(), 1);
-            CollectionAssert.Contains(searchResultTexts, "Gartner IAM Summit 2016 - London");
+            CollectionAssert.Contains(searchResultTexts, articleTitle);
 
             // Step 3
 
-            UI.MainSearchResultsLinks[searchResultTexts.IndexOf("Gartner IAM Summit 2016 - London")].ScrollIntoView().Click().WaitForPageLoad();
+            UI.MainSearchResultsLinks[searchResultTexts.IndexOf(articleTitle)].ScrollIntoView().Click().WaitForNewPage();
 
-            Assert.AreEqual("Gartner IAM Summit 2016 - London", UI.MainH1.Element.Text);
+            Assert.AreEqual(articleTitle, UI.MainH1.Text);
 
             // Step 4
 
             UI.HeaderNavMoreLink.Hover();
-            UI.HeaderNavMoreNewsLink.WaitUntilVisible().Click().WaitForPageLoad();
+            UI.HeaderNavMoreNewsLink.WaitUntilVisible().Click().WaitForNewPage();
 
-            CollectionAssert.Contains(UI.MainArticlesH1s.Elements.Select(element => element.Text), "Gartner IAM Summit 2016 - London");
+            CollectionAssert.Contains(UI.MainArticlesH1s.Texts, articleTitle);
 
             // Step 5
 
-            UI.HeaderHomeLink.Click().WaitForPageLoad();
-            UI.HeaderContactLink.Click().WaitForPageLoad();
+            UI.HeaderHomeLink.Click().WaitForNewPage();
+            UI.HeaderContactLink.Click().WaitForNewPage();
 
-            var previousClasses = UI.MainTabsUsWestSpan.GetClassNames();
+            var previousClasses = UI.MainTabsUsWestSpan.ClassNames;
             UI.MainTabsUsWestSpan.Click();
-            var currentClasses = UI.MainTabsUsWestSpan.GetClassNames();
+            var currentClasses = UI.MainTabsUsWestSpan.ClassNames;
 
             CollectionAssert.IsSupersetOf(currentClasses, previousClasses);
 
@@ -117,7 +87,7 @@ namespace Selenium.Tests
             // Step 6
 
             UI.CookieReadPrivacyPolicyLink.SetAttribute("target", "_blank").Click();
-            UI.Page.SwitchToTab(Index.Last).WaitForPageLoad();
+            UI.Page.SwitchToTab(Index.Last).WaitForNewPage();
 
             // Step 7
 
@@ -125,8 +95,7 @@ namespace Selenium.Tests
             UI.CookieCloseButtonSpan.Click();
 
             UI.Page.CloseTab(Index.Last);
-            Driver.Navigate().Refresh();
-            UI.Page.WaitForPageLoad();
+            UI.Page.Refresh().WaitForNewPage();
 
             UI.CookieReadPrivacyPolicyLink.WaitUntilInvisibile();
         }
