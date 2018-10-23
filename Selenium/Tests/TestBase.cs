@@ -5,6 +5,7 @@ using NUnit.Framework;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Remote;
+using Selenium.Utilities;
 using System;
 using System.IO;
 using System.Reflection;
@@ -48,6 +49,8 @@ namespace Selenium.Tests
             }
 
             Driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(30);
+
+            UIBase.Initialize(Driver);
         }
 
         /// <summary>

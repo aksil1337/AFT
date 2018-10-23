@@ -3,7 +3,6 @@
 
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Remote;
 using SeleniumExtras.WaitHelpers;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +16,11 @@ namespace Selenium.Utilities
     {
         // Constructors
 
-        public UIElement(UIMap map, RemoteWebDriver driver) : base(map, driver) { }
+        public UIElement(string xpath)
+        {
+            By = By.XPath(xpath);
+            Element = Driver.FindElement(By);
+        }
 
         // Properties
 
@@ -29,7 +32,7 @@ namespace Selenium.Utilities
         /// <summary>
         /// Gets or sets the underlying element.
         /// </summary>
-        public IWebElement Element { get; internal set; }
+        public IWebElement Element { get; }
 
         /// <summary>
         /// Gets the inner text of the element.

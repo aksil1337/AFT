@@ -50,12 +50,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Tests\Omada.cs" />
+    <Compile Include="Tests\Omada.Map.cs">
+      <DependentUpon>Omada.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tests\TestBase.cs" />
     <Compile Include="Utilities\Enums\Index.cs" />
     <Compile Include="Utilities\UIBase.cs" />
     <Compile Include="Utilities\UIElement.cs" />
     <Compile Include="Utilities\UIElements.cs" />
-    <Compile Include="Utilities\UIMap.cs" />
     <Compile Include="Utilities\UIPage.cs" />
   </ItemGroup>
   <ItemGroup>

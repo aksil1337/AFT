@@ -20,18 +20,7 @@ namespace Selenium.Tests
 
         // Properties
 
-        protected UIMap UI { get; private set; }
-
-        // Setup and Teardown
-
-        /// <summary>
-        /// Runs the specified code before each test.
-        /// </summary>
-        [SetUp]
-        public new void BeforeEach()
-        {
-            UI = new UIMap(Driver);
-        }
+        protected OmadaMap UI { get; } = new OmadaMap();
 
         // Tests
 

@@ -12,30 +12,29 @@ namespace Selenium.Utilities
     /// <summary>
     /// Provides a base class for UI web element wrappers. Exposes the locator and the driver used to find the element.
     /// </summary>
-    class UIBase
+    abstract class UIBase
     {
-        // Constructors
+        // Properties
 
-        public UIBase(UIMap map, RemoteWebDriver driver)
+        public static RemoteWebDriver Driver { get; private set; }
+
+        protected static IWebElement HtmlElement { get; private set; }
+
+        protected static WebDriverWait Wait { get; private set; }
+
+        public By By { get; protected set; }
+
+        // Methods
+
+        /// <summary>
+        /// Initializes the static properties used in the derived classes.
+        /// </summary>
+        /// <param name="driver">A web driver instance.</param>
+        public static void Initialize(RemoteWebDriver driver)
         {
-            Map = map;
             Driver = driver;
             Wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
         }
-
-        // Properties
-
-        public By By { get; internal set; }
-
-        public RemoteWebDriver Driver { get; }
-
-        protected IWebElement HtmlElement { get; private set; }
-
-        protected UIMap Map { get; }
-
-        protected WebDriverWait Wait { get; }
-
-        // Methods
 
         /// <summary>
         /// Waits for the new page to be loaded propely.

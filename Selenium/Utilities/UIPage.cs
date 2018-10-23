@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
 using System.IO;
 using System.Reflection;
 
@@ -15,7 +14,7 @@ namespace Selenium.Utilities
     {
         // Constructors
 
-        public UIPage(UIMap map, RemoteWebDriver driver) : base(map, driver)
+        public UIPage()
         {
             By = By.TagName("html");
             TabIndex = Driver.WindowHandles.IndexOf(Driver.CurrentWindowHandle);

@@ -2,7 +2,6 @@
 // Licensed under the MIT License.
 
 using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -15,8 +14,12 @@ namespace Selenium.Utilities
     class UIElements : UIBase
     {
         // Constructors
-
-        public UIElements(UIMap map, RemoteWebDriver driver) : base(map, driver) { }
+        
+        public UIElements(string xpath)
+        {
+            By = By.XPath(xpath);
+            Elements = Driver.FindElements(By);
+        }
 
         // Properties
 
@@ -25,12 +28,12 @@ namespace Selenium.Utilities
         /// </summary>
         /// <param name="i">The zero-based index of the element to get.</param>
         /// <returns>The element at the specified index.</returns>
-        public UIElement this[int i] => Map.FindElement($"({By.ToString().Substring(10)})[{i + 1}]");
+        public UIElement this[int i] => new UIElement($"({By.ToString().Substring(10)})[{i + 1}]");
 
         /// <summary>
         /// Gets or sets the underlying collection of elements.
         /// </summary>
-        public ReadOnlyCollection<IWebElement> Elements { get; internal set; }
+        public ReadOnlyCollection<IWebElement> Elements { get; }
 
         /// <summary>
         /// Gets the inner texts of all elements.
